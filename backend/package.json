@@ -1,0 +1,13 @@
+{
+  "name": "contact-api",
+  "version": "1.0.0",
+  "description": "Contact form API for portfolio",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/index.test.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.490.0"
+  },
+  "devDependencies": {}
+}

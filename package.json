@@ -1,0 +1,39 @@
+{
+  "name": "yashika-portfolio",
+  "version": "1.0.0",
+  "description": "Mario-style 2D pixel-art platformer portfolio for Yashika Agrawal",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "keywords": [
+    "portfolio",
+    "react",
+    "vite",
+    "game",
+    "mario"
+  ],
+  "author": "Yashika Agrawal",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.6.2",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
+    "vite": "^5.0.10"
+  }
+}
