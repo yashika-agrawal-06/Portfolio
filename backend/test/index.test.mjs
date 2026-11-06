@@ -24,23 +24,34 @@ process.env.AWS_REGION = 'us-east-1';
 const { handler, __setSesClient } = await import('../src/index.mjs');
 __setSesClient(new MockSESClient());
 
+const AMPLIFY_ORIGIN = 'https://main.d31ig95e4v66g9.amplifyapp.com';
+
 describe('Contact API Handler', () => {
   beforeEach(() => {
     mockSend.mock.resetCalls();
   });
 
-  function makeEvent(body, method = 'POST') {
+  function makeEvent(body, method = 'POST', origin = AMPLIFY_ORIGIN) {
     return {
       httpMethod: method,
       requestContext: { http: { method } },
       body: JSON.stringify(body),
+      headers: { origin },
     };
   }
 
+  function assertCorsHeaders(headers) {
+    assert.equal(headers['Access-Control-Allow-Origin'], '*');
+    assert.ok(!headers['Access-Control-Allow-Credentials']);
+    assert.equal(headers['Access-Control-Allow-Headers'], 'Content-Type');
+    assert.equal(headers['Access-Control-Allow-Methods'], 'POST,OPTIONS');
+  }
+
   it('should return 400 for invalid JSON', async () => {
-    const event = { httpMethod: 'POST', body: 'not json' };
+    const event = { httpMethod: 'POST', body: 'not json', headers: { origin: AMPLIFY_ORIGIN } };
     const result = await handler(event);
     assert.equal(result.statusCode, 400);
+    assertCorsHeaders(result.headers);
     const body = JSON.parse(result.body);
     assert.ok(body.error.includes('Invalid JSON'));
   });
@@ -49,6 +60,7 @@ describe('Contact API Handler', () => {
     const event = makeEvent({});
     const result = await handler(event);
     assert.equal(result.statusCode, 400);
+    assertCorsHeaders(result.headers);
     const body = JSON.parse(result.body);
     assert.equal(body.error, 'Validation failed');
     assert.ok(body.details.length >= 4);
@@ -58,6 +70,7 @@ describe('Contact API Handler', () => {
     const event = makeEvent({ name: 'Test', email: 'not-email', subject: 'Hi', message: 'Hello' });
     const result = await handler(event);
     assert.equal(result.statusCode, 400);
+    assertCorsHeaders(result.headers);
     const body = JSON.parse(result.body);
     assert.ok(body.details.some(d => d.includes('email')));
   });
@@ -72,6 +85,7 @@ describe('Contact API Handler', () => {
     });
     const result = await handler(event);
     assert.equal(result.statusCode, 200);
+    assertCorsHeaders(result.headers);
     const body = JSON.parse(result.body);
     assert.equal(body.ok, true);
     assert.equal(mockSend.mock.callCount(), 0);
@@ -79,7 +93,7 @@ describe('Contact API Handler', () => {
 
   it('should return 200 and send email for valid request', async () => {
     mockSend.mock.mockImplementationOnce(() => Promise.resolve({ MessageId: 'test-id' }));
-    
+
     const event = makeEvent({
       name: 'Test User',
       email: 'test@example.com',
@@ -89,6 +103,7 @@ describe('Contact API Handler', () => {
     });
     const result = await handler(event);
     assert.equal(result.statusCode, 200);
+    assertCorsHeaders(result.headers);
     const body = JSON.parse(result.body);
     assert.equal(body.ok, true);
     assert.equal(mockSend.mock.callCount(), 1);
@@ -96,7 +111,7 @@ describe('Contact API Handler', () => {
 
   it('should return 500 when SES fails', async () => {
     mockSend.mock.mockImplementationOnce(() => Promise.reject(new Error('SES error')));
-    
+
     const event = makeEvent({
       name: 'Test User',
       email: 'test@example.com',
@@ -106,23 +121,22 @@ describe('Contact API Handler', () => {
     });
     const result = await handler(event);
     assert.equal(result.statusCode, 500);
+    assertCorsHeaders(result.headers);
     const body = JSON.parse(result.body);
     assert.ok(body.error.includes('Failed to send'));
   });
 
   it('should handle OPTIONS preflight', async () => {
-    const event = { httpMethod: 'OPTIONS' };
+    const event = { httpMethod: 'OPTIONS', headers: { origin: AMPLIFY_ORIGIN } };
     const result = await handler(event);
     assert.equal(result.statusCode, 200);
-    assert.ok(result.headers['Access-Control-Allow-Origin']);
+    assertCorsHeaders(result.headers);
   });
 
   it('should include CORS headers in all responses', async () => {
     const event = makeEvent({});
     const result = await handler(event);
-    assert.ok(result.headers['Access-Control-Allow-Origin']);
-    assert.ok(result.headers['Access-Control-Allow-Headers']);
-    assert.ok(result.headers['Access-Control-Allow-Methods']);
+    assertCorsHeaders(result.headers);
   });
 });
 

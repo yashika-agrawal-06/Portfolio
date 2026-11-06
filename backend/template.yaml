@@ -12,7 +12,6 @@ Globals:
       Variables:
         SENDER_EMAIL: !Ref SenderEmail
         RECIPIENT_EMAIL: !Ref RecipientEmail
-        ALLOWED_ORIGINS: !Ref AllowedOrigins
     Tracing: Active
     LoggingConfig:
       LogFormat: JSON
@@ -28,10 +27,6 @@ Parameters:
     Type: String
     Description: Verified recipient email address
     Default: yashikaagrawal1926@gmail.com
-  AllowedOrigins:
-    Type: String
-    Description: Comma-separated list of allowed CORS origins
-    Default: "http://localhost:3000,http://localhost:5173"
 
 Resources:
   ContactApi:
@@ -62,6 +57,22 @@ Resources:
                   description: Bad Request
                 '500':
                   description: Internal Server Error
+
+  GatewayResponseDefault4XX:
+    Type: AWS::ApiGateway::GatewayResponse
+    Properties:
+      RestApiId: !Ref ContactApi
+      ResponseType: DEFAULT_4XX
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+
+  GatewayResponseDefault5XX:
+    Type: AWS::ApiGateway::GatewayResponse
+    Properties:
+      RestApiId: !Ref ContactApi
+      ResponseType: DEFAULT_5XX
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
 
   ContactFunctionRole:
     Type: AWS::IAM::Role
