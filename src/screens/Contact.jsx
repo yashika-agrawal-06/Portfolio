@@ -25,6 +25,7 @@ const Contact = () => {
   const [errors, setErrors] = useState({})
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState({ title: '', message: '', type: 'info' })
+  const [photoError, setPhotoError] = useState(false)
 
   const validateForm = () => {
     const newErrors = {}
@@ -185,159 +186,201 @@ const Contact = () => {
               </p>
             </div>
 
-            {/* Contact Form */}
-            <div className="w-full max-w-2xl mb-6 animate-slide-up">
-              <PixelPanel variant="retro" className="p-5">
-                <h3 className="font-pixel text-[11px] text-[var(--text)] mb-4 border-b-2 border-[var(--border-dark)] pb-2 flex items-center gap-2">
-                  <span aria-hidden="true">✍️</span> SEND A MESSAGE
-                </h3>
-
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                  {/* Honeypot field - hidden from users */}
-                  <input
-                    type="text"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    tabIndex={-1}
-                    autoComplete="off"
-                    style={{ display: 'none' }}
-                    aria-hidden="true"
-                  />
-
-                  <div>
-                    <label htmlFor="name" className="block font-pixel text-[10px] text-[var(--text)] mb-1">YOUR NAME</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] ${errors.name ? 'border-red-500' : ''}`}
-                      placeholder="Your Name"
-                      disabled={formState === 'submitting'}
-                      aria-invalid={errors.name ? 'true' : 'false'}
-                      aria-describedby={errors.name ? 'name-error' : undefined}
-                    />
-                    {errors.name && <p id="name-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.name}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block font-pixel text-[10px] text-[var(--text)] mb-1">EMAIL ADDRESS</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] ${errors.email ? 'border-red-500' : ''}`}
-                      placeholder="you@example.com"
-                      disabled={formState === 'submitting'}
-                      aria-invalid={errors.email ? 'true' : 'false'}
-                      aria-describedby={errors.email ? 'email-error' : undefined}
-                    />
-                    {errors.email && <p id="email-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.email}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block font-pixel text-[10px] text-[var(--text)] mb-1">SUBJECT</label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] ${errors.subject ? 'border-red-500' : ''}`}
-                      disabled={formState === 'submitting'}
-                      aria-invalid={errors.subject ? 'true' : 'false'}
-                      aria-describedby={errors.subject ? 'subject-error' : undefined}
-                    >
-                      <option value="">Select a subject</option>
-                      <option value="project">Project Inquiry</option>
-                      <option value="collaboration">Collaboration</option>
-                      <option value="hiring">Hiring / Freelance</option>
-                      <option value="speaking">Speaking Engagement</option>
-                      <option value="mentorship">Mentorship</option>
-                      <option value="other">Other</option>
-                    </select>
-                    {errors.subject && <p id="subject-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.subject}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block font-pixel text-[10px] text-[var(--text)] mb-1">MESSAGE</label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows={5}
-                      className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] resize-y ${errors.message ? 'border-red-500' : ''}`}
-                      placeholder="Tell me about your project, idea, or just say hello!"
-                      disabled={formState === 'submitting'}
-                      aria-invalid={errors.message ? 'true' : 'false'}
-                      aria-describedby={errors.message ? 'message-error' : 'message-hint'}
-                    />
-                    {errors.message && <p id="message-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.message}</p>}
-                    <p id="message-hint" className="mt-1 font-pixel text-[8px] text-[var(--text-muted)]">Minimum 10 characters</p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                    <PixelButton
-                      type="submit"
-                      variant="green"
-                      size="lg"
-                      className="flex-1"
-                      disabled={formState === 'submitting'}
-                    >
-                      {formState === 'submitting' ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                          SENDING...
-                        </span>
+            {/* Photo & Contact Layout */}
+            <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+              {/* Photo Column */}
+              <div className="lg:order-1 order-2 animate-fade-in" style={{ animationDelay: '200ms' }}>
+                <div className="relative">
+                  {/* Mario-style question block frame for photo */}
+                  <div className="relative bg-[var(--gold)] border-4 border-[var(--border-dark)] rounded-xl p-1 shadow-[4px_4px_0px_var(--border-dark)]">
+                    <div className="relative bg-cream border-3 border-[var(--border-dark)] rounded-lg overflow-hidden">
+                      {/* Question mark pattern overlay */}
+                      <div className="absolute inset-0 opacity-5 pointer-events-none" aria-hidden="true">
+                        <div className="absolute top-4 left-4 w-6 h-6 border-2 border-[var(--border-dark)] rounded">
+                          <div className="absolute top-1 left-2 w-2 h-2 bg-[var(--border-dark)] rounded" />
+                          <div className="absolute top-1 right-2 w-2 h-2 bg-[var(--border-dark)] rounded" />
+                          <div className="absolute bottom-1 left-1 w-1 h-2 bg-[var(--border-dark)] rounded" />
+                        </div>
+                      </div>
+                      {photoError ? (
+                        <div className="aspect-[3/4] flex flex-col items-center justify-center bg-gradient-to-br from-[var(--cream)] to-yellow-100">
+                          <div className="text-6xl mb-2" aria-hidden="true">🍄</div>
+                          <p className="font-pixel text-[10px] text-[var(--border-dark)] text-center px-4">Photo\nUnavailable</p>
+                        </div>
                       ) : (
-                        '📤 SEND MESSAGE'
+                        <img
+                          src="/images/yashika.png"
+                          alt="Yashika Agrawal - Cloud/DevOps/AI Engineer"
+                          className="w-full h-auto object-cover block"
+                          onError={() => setPhotoError(true)}
+                          loading="lazy"
+                        />
                       )}
-                    </PixelButton>
-                    <PixelButton
-                      type="button"
-                      variant="cream"
-                      size="lg"
-                      onClick={() => { setFormData({ name: '', email: '', subject: '', message: '', website: '' }); setErrors({}); playClick(); }}
-                      className="flex-1"
-                      disabled={formState === 'submitting'}
-                    >
-                      🔄 RESET
-                    </PixelButton>
+                    </div>
                   </div>
-                </form>
-              </PixelPanel>
-            </div>
-
-            {/* Direct Contact */}
-            <div className="w-full max-w-3xl mb-6 animate-slide-up" style={{ animationDelay: '100ms' }}>
-              <PixelPanel variant="retro" className="p-5">
-                <h3 className="font-pixel text-[11px] text-[var(--text)] mb-4 border-b-2 border-[var(--border-dark)] pb-2 flex items-center gap-2">
-                  <span aria-hidden="true">🔗</span> CONNECT DIRECTLY
-                </h3>
-                <p className="font-[var(--font-body)] text-sm text-[var(--text-muted)] mb-4">Click any button to open the platform directly. Each click earns you 2 coins!</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  <PixelButton variant="cream" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('github')}>
-                    <span className="text-2xl" aria-hidden="true">🐙</span>
-                    <span className="font-pixel text-[9px]">GITHUB</span>
-                  </PixelButton>
-                  <PixelButton variant="cream" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('linkedin')}>
-                    <span className="text-2xl" aria-hidden="true">💼</span>
-                    <span className="font-pixel text-[9px]">LINKEDIN</span>
-                  </PixelButton>
-                  <PixelButton variant="gold" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('email')}>
-                    <span className="text-2xl" aria-hidden="true">📧</span>
-                    <span className="font-pixel text-[9px]">EMAIL</span>
-                  </PixelButton>
-                  <PixelButton variant="cream" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('leetcode')}>
-                    <span className="text-2xl" aria-hidden="true">💡</span>
-                    <span className="font-pixel text-[9px]">LEETCODE</span>
-                  </PixelButton>
+                  {/* Decorative coins at corners */}
+                  <Coin className="absolute -top-3 -right-3 coin-spin" size={28} />
+                  <Coin className="absolute -bottom-3 -left-3 coin-spin" size={24} style={{ animationDelay: '500ms' }} />
                 </div>
-              </PixelPanel>
+              </div>
+
+              {/* Contact Form & Info Column */}
+              <div className="lg:order-2 order-1 w-full space-y-6 animate-slide-up">
+                {/* Contact Form */}
+                <div className="w-full max-w-2xl mx-auto lg:mx-0">
+                  <PixelPanel variant="retro" className="p-5">
+                    <h3 className="font-pixel text-[11px] text-[var(--text)] mb-4 border-b-2 border-[var(--border-dark)] pb-2 flex items-center gap-2">
+                      <span aria-hidden="true">✍️</span> SEND A MESSAGE
+                    </h3>
+
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                      {/* Honeypot field - hidden from users */}
+                      <input
+                        type="text"
+                        name="website"
+                        value={formData.website}
+                        onChange={handleChange}
+                        tabIndex={-1}
+                        autoComplete="off"
+                        style={{ display: 'none' }}
+                        aria-hidden="true"
+                      />
+
+                      <div>
+                        <label htmlFor="name" className="block font-pixel text-[10px] text-[var(--text)] mb-1">YOUR NAME</label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] ${errors.name ? 'border-red-500' : ''}`}
+                          placeholder="Your Name"
+                          disabled={formState === 'submitting'}
+                          aria-invalid={errors.name ? 'true' : 'false'}
+                          aria-describedby={errors.name ? 'name-error' : undefined}
+                        />
+                        {errors.name && <p id="name-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.name}</p>}
+                      </div>
+
+                      <div>
+                        <label htmlFor="email" className="block font-pixel text-[10px] text-[var(--text)] mb-1">EMAIL ADDRESS</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] ${errors.email ? 'border-red-500' : ''}`}
+                          placeholder="you@example.com"
+                          disabled={formState === 'submitting'}
+                          aria-invalid={errors.email ? 'true' : 'false'}
+                          aria-describedby={errors.email ? 'email-error' : undefined}
+                        />
+                        {errors.email && <p id="email-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.email}</p>}
+                      </div>
+
+                      <div>
+                        <label htmlFor="subject" className="block font-pixel text-[10px] text-[var(--text)] mb-1">SUBJECT</label>
+                        <select
+                          id="subject"
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] ${errors.subject ? 'border-red-500' : ''}`}
+                          disabled={formState === 'submitting'}
+                          aria-invalid={errors.subject ? 'true' : 'false'}
+                          aria-describedby={errors.subject ? 'subject-error' : undefined}
+                        >
+                          <option value="">Select a subject</option>
+                          <option value="project">Project Inquiry</option>
+                          <option value="collaboration">Collaboration</option>
+                          <option value="hiring">Hiring / Freelance</option>
+                          <option value="speaking">Speaking Engagement</option>
+                          <option value="mentorship">Mentorship</option>
+                          <option value="other">Other</option>
+                        </select>
+                        {errors.subject && <p id="subject-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.subject}</p>}
+                      </div>
+
+                      <div>
+                        <label htmlFor="message" className="block font-pixel text-[10px] text-[var(--text)] mb-1">MESSAGE</label>
+                        <textarea
+                          id="message"
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          rows={5}
+                          className={`w-full px-3 py-2 bg-white border-2 border-[var(--border-dark)] rounded-lg font-[var(--font-body)] text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] resize-y ${errors.message ? 'border-red-500' : ''}`}
+                          placeholder="Tell me about your project, idea, or just say hello!"
+                          disabled={formState === 'submitting'}
+                          aria-invalid={errors.message ? 'true' : 'false'}
+                          aria-describedby={errors.message ? 'message-error' : 'message-hint'}
+                        />
+                        {errors.message && <p id="message-error" className="mt-1 font-pixel text-[9px] text-red-600" role="alert">{errors.message}</p>}
+                        <p id="message-hint" className="mt-1 font-pixel text-[8px] text-[var(--text-muted)]">Minimum 10 characters</p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                        <PixelButton
+                          type="submit"
+                          variant="green"
+                          size="lg"
+                          className="flex-1"
+                          disabled={formState === 'submitting'}
+                        >
+                          {formState === 'submitting' ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                              SENDING...
+                            </span>
+                          ) : (
+                            '📤 SEND MESSAGE'
+                          )}
+                        </PixelButton>
+                        <PixelButton
+                          type="button"
+                          variant="cream"
+                          size="lg"
+                          onClick={() => { setFormData({ name: '', email: '', subject: '', message: '', website: '' }); setErrors({}); playClick(); }}
+                          className="flex-1"
+                          disabled={formState === 'submitting'}
+                        >
+                          🔄 RESET
+                        </PixelButton>
+                      </div>
+                    </form>
+                  </PixelPanel>
+                </div>
+
+                {/* Direct Contact */}
+                <div className="w-full max-w-2xl mx-auto lg:mx-0 animate-slide-up" style={{ animationDelay: '100ms' }}>
+                  <PixelPanel variant="retro" className="p-5">
+                    <h3 className="font-pixel text-[11px] text-[var(--text)] mb-4 border-b-2 border-[var(--border-dark)] pb-2 flex items-center gap-2">
+                      <span aria-hidden="true">🔗</span> CONNECT DIRECTLY
+                    </h3>
+                    <p className="font-[var(--font-body)] text-sm text-[var(--text-muted)] mb-4">Click any button to open the platform directly. Each click earns you 2 coins!</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                      <PixelButton variant="cream" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('github')}>
+                        <span className="text-2xl" aria-hidden="true">🐙</span>
+                        <span className="font-pixel text-[9px]">GITHUB</span>
+                      </PixelButton>
+                      <PixelButton variant="cream" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('linkedin')}>
+                        <span className="text-2xl" aria-hidden="true">💼</span>
+                        <span className="font-pixel text-[9px]">LINKEDIN</span>
+                      </PixelButton>
+                      <PixelButton variant="gold" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('email')}>
+                        <span className="text-2xl" aria-hidden="true">📧</span>
+                        <span className="font-pixel text-[9px]">EMAIL</span>
+                      </PixelButton>
+                      <PixelButton variant="cream" size="md" className="flex flex-col items-center gap-1" onClick={() => handleDirectContact('leetcode')}>
+                        <span className="text-2xl" aria-hidden="true">💡</span>
+                        <span className="font-pixel text-[9px]">LEETCODE</span>
+                      </PixelButton>
+                    </div>
+                  </PixelPanel>
+                </div>
+              </div>
             </div>
           </div>
         </div>
