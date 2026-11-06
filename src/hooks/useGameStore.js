@@ -21,7 +21,7 @@ const initialState = {
     aushdrishti: false,
     intentswitch: false
   },
-  soundEnabled: false,
+  soundEnabled: true,
   currentScreen: 'preloader',
   isPaused: false
 }

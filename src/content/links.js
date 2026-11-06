@@ -6,7 +6,7 @@ export const links = {
   github: 'https://github.com/yashika-agrawal-06/',
   linkedin: 'https://www.linkedin.com/in/yashikaagrawal19',
   email: 'mailto:yashikaagrawal1926@gmail.com',
-  leetcode: 'https://leetcode.com/yashikaagrawal19',
+  leetcode: 'https://leetcode.com/u/Yashika__Agrawal19/',
   codeforces: 'https://codeforces.com/profile/yashikaagrawal19',
 
   // Portfolio & Resume

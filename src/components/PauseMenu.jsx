@@ -6,19 +6,10 @@ import { links } from '../content/links'
 
 const PauseMenu = () => {
   const navigate = useNavigate()
-  const { isPaused, setPaused, soundEnabled, toggleSound, resetGame } = useGameStore()
+  const { isPaused, setPaused } = useGameStore()
 
   const handleResume = () => {
     setPaused(false)
-  }
-
-  const handleResetProgress = () => {
-    if (window.confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-      resetGame()
-      setPaused(false)
-      // Reload to fully reset state
-      window.location.reload()
-    }
   }
 
   // Handle Escape key to resume
@@ -94,13 +85,6 @@ const PauseMenu = () => {
             }}
           >
             📮 CONTACT YASHIKA
-          </PixelButton>
-          <PixelButton
-            variant="red"
-            size="sm"
-            onClick={handleResetProgress}
-          >
-            🔄 RESET PROGRESS
           </PixelButton>
         </div>
       </div>
