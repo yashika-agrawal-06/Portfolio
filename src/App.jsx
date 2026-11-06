@@ -35,10 +35,11 @@ function App() {
 
       <TopBar />
 
+      <ScrollToTop />
+
       <main id="main-content" className="flex-1 w-full">
         <ErrorBoundary>
           <Routes>
-            <ScrollToTop />
             <Route path="/preloader" element={<Preloader />} />
             <Route path="/" element={<Start />} />
             <Route path="/guess" element={<Guess />} />
