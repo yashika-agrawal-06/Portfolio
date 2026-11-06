@@ -14,6 +14,7 @@ import WorldMap from './screens/WorldMap'
 import ProjectDetail from './screens/ProjectDetail'
 import Contact from './screens/Contact'
 import NotFound from './screens/NotFound'
+import ScrollToTop from './components/ScrollToTop'
 import { useGameStore } from './hooks/useGameStore'
 import { useAudio } from './hooks/useAudio'
 
@@ -37,6 +38,7 @@ function App() {
       <main id="main-content" className="flex-1 w-full">
         <ErrorBoundary>
           <Routes>
+            <ScrollToTop />
             <Route path="/preloader" element={<Preloader />} />
             <Route path="/" element={<Start />} />
             <Route path="/guess" element={<Guess />} />
