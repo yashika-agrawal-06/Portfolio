@@ -328,24 +328,24 @@ function playSuccess() {
 // Toggle mute - sets master gain to 0 or 1, resumes context if needed
 function toggleMute() {
   // If not initialized yet, initialize first (first user gesture)
+  // On first interaction, apply current soundEnabled state (don't toggle yet)
+  // so that tapping the sound button starts music if sound is enabled
   if (!initialized) {
     ensureInitialized().then(() => {
-      // After initialization, toggle and start music if enabling
-      soundEnabled = !soundEnabled
-
+      // Apply current soundEnabled state (default: true) without toggling
       if (masterGain && audioContext) {
         masterGain.gain.setValueAtTime(soundEnabled ? 1 : 0, audioContext.currentTime)
       }
 
+      // Start music if sound is enabled
       if (soundEnabled && !isBgMusicPlaying) {
         startBgMusic()
-      } else if (!soundEnabled && isBgMusicPlaying) {
-        stopBgMusic()
       }
     })
     return
   }
 
+  // Normal toggle behavior after initialization
   soundEnabled = !soundEnabled
 
   // Apply mute/gain
