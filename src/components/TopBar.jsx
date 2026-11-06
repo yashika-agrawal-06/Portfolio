@@ -25,11 +25,11 @@ const TopBar = () => {
   }
 
   return (
-    <header className="w-full bg-[var(--cream)] border-b-4 border-[var(--border-dark)] sticky top-0 z-50 shadow-[0_4px_0px_var(--border-dark)] px-4 py-2 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <header className="w-full bg-[var(--cream)] border-b-4 border-[var(--border-dark)] sticky top-0 z-50 shadow-[0_4px_0px_var(--border-dark)] px-4 py-1.5 flex items-center justify-between">
+      <div className="flex items-center gap-2">
         {/* Player Badge */}
         <button
-          className="flex items-center gap-2.5 px-2.5 py-1 bg-white border-2 border-[var(--border-dark)] rounded shadow-sm hover:bg-yellow-50 transition"
+          className="flex items-center gap-2 px-2 py-1 bg-white border-2 border-[var(--border-dark)] rounded shadow-sm hover:bg-yellow-50 transition"
           onClick={() => handleQuickNav('/')}
           title="Start Screen"
           aria-label="Go to Start Screen"
@@ -59,6 +59,18 @@ const TopBar = () => {
           <span className="font-pixel text-[11px] text-[var(--text)] font-bold hidden sm:inline">YASHIKA</span>
         </button>
 
+        {/* Mobile Pause Button - shows beside logo on mobile, hidden on desktop */}
+        <PixelButton
+          variant="gold"
+          size="sm"
+          onClick={handlePauseClick}
+          aria-label={isPaused ? 'Resume Game' : 'Pause Game'}
+          className="md:hidden min-h-[40px] min-w-[40px] px-2"
+        >
+          <span className="" aria-hidden="true">{isPaused ? '▶' : '⏸'}</span>
+          <span className="hidden sm:inline">{isPaused ? 'RESUME' : 'PAUSE'}</span>
+        </PixelButton>
+
         {/* Quick Nav Buttons for Desktop */}
         <nav className="hidden md:flex items-center gap-1.5 ml-2" aria-label="Quick navigation">
           <PixelButton variant="cream" size="sm" onClick={() => handleQuickNav('/map')} aria-label="Go to Map">
@@ -82,10 +94,10 @@ const TopBar = () => {
         </nav>
       </div>
 
-      {/* HUD Right: Coin Counter, Sound Toggle, Map, Pause */}
-      <div className="flex items-center gap-3">
+      {/* HUD Right: Coin Counter, Sound Toggle, Resume, Map, Pause (desktop only) */}
+      <div className="flex items-center gap-2">
         {/* Coin Counter */}
-        <div className="flex items-center gap-2 bg-[var(--border-dark)] text-[var(--gold)] px-3 py-1.5 rounded border-2 border-[var(--gold)] shadow-inner font-pixel text-xs" role="status" aria-live="polite" aria-label={`Coins: ${coins}`}>
+        <div className="flex items-center gap-1.5 bg-[var(--border-dark)] text-[var(--gold)] px-2.5 py-1 rounded border-2 border-[var(--gold)] shadow-inner font-pixel text-xs" role="status" aria-live="polite" aria-label={`Coins: ${coins}`}>
           <div className="w-4 h-4 bg-[var(--gold)] rounded-full border border-black coin-spin flex items-center justify-center text-[9px] text-[#8C5908] font-bold" aria-hidden="true">★</div>
           <span>×</span>
           <span className="font-bold text-amber-600">{coins.toString().padStart(2, '0')}</span>
@@ -93,7 +105,7 @@ const TopBar = () => {
 
         {/* Sound Toggle */}
         <button
-          className="p-1.5 bg-[var(--cream)] hover:bg-yellow-100 border-2 border-[var(--border-dark)] rounded shadow-sm transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="p-1.5 bg-[var(--cream)] hover:bg-yellow-100 border-2 border-[var(--border-dark)] rounded shadow-sm transition min-h-[40px] min-w-[40px] flex items-center justify-center"
           onClick={toggleMute}
           title={isMuted ? 'Enable sound effects' : 'Mute sound effects'}
           aria-label={isMuted ? 'Enable sound effects' : 'Mute sound effects'}
@@ -108,11 +120,11 @@ const TopBar = () => {
           href={links.resume}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-yellow-50 border-2 border-[var(--border-dark)] rounded shadow-sm transition text-[var(--text)] font-pixel text-[10px] min-h-[44px]"
+          className="flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-yellow-50 border-2 border-[var(--border-dark)] rounded shadow-sm transition text-[var(--text)] font-pixel text-[10px] min-h-[40px]"
           title="View Resume (opens in new tab)"
           aria-label="View Resume"
         >
-          <span aria-hidden="true">📄</span> RESUME
+          <span aria-hidden="true">📄</span> <span className="hidden sm:inline">RESUME</span>
         </a>
 
         {/* Map Button */}
@@ -121,16 +133,18 @@ const TopBar = () => {
           size="sm"
           onClick={handleMapClick}
           aria-label="Open Level Map"
+          className="min-h-[40px]"
         >
-          <span className="mr-1" aria-hidden="true">🗺️</span> MAP
+          <span className="mr-1" aria-hidden="true">🗺️</span> <span className="hidden sm:inline">MAP</span>
         </PixelButton>
 
-        {/* Pause Button */}
+        {/* Pause Button - Desktop only (hidden on mobile) */}
         <PixelButton
           variant="gold"
           size="sm"
           onClick={handlePauseClick}
           aria-label={isPaused ? 'Resume Game' : 'Pause Game'}
+          className="hidden md:flex min-h-[40px]"
         >
           <span className="" aria-hidden="true">{isPaused ? '▶' : '⏸'}</span> {isPaused ? 'RESUME' : 'PAUSE'}
         </PixelButton>
